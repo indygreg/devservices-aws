@@ -14,7 +14,7 @@ resource "aws_iam_user" "hgnotifier" {
 # Unfortunately, attempting to reference resources outside the current
 # region is rejected by Amazon, hence the need for multiple policies.
 
-data "aws_iam_policy_document" "hg_bundles_use1" {
+data "aws_iam_policy_document" "hg_bundles" {
     # Grant bundler user access to upload and modify objects.
     statement = {
         effect = "Allow"
@@ -24,7 +24,7 @@ data "aws_iam_policy_document" "hg_bundles_use1" {
             "s3:PutObject",
         ]
         resources = [
-            "${aws_s3_bucket.hg_bundles_use1.arn}/*",
+            "${aws_s3_bucket.hg_bundles_region.*.arn}/*",
         ]
         principals {
             type = "AWS"
@@ -40,112 +40,7 @@ data "aws_iam_policy_document" "hg_bundles_use1" {
             "s3:GetObject",
         ]
         resources = [
-            "${aws_s3_bucket.hg_bundles_use1.arn}/*",
-        ]
-        principals {
-            type = "AWS"
-            identifiers = ["*"]
-        }
-    }
-}
-
-data "aws_iam_policy_document" "hg_bundles_usw1" {
-    # Grant bundler user access to upload and modify objects.
-    statement = {
-        effect = "Allow"
-        actions = [
-            "s3:DeleteObject",
-            "s3:GetObject",
-            "s3:PutObject",
-        ]
-        resources = [
-            "${aws_s3_bucket.hg_bundles_usw1.arn}/*",
-        ]
-        principals {
-            type = "AWS"
-            identifiers = ["${aws_iam_user.hgbundler.arn}"]
-        }
-    }
-
-    # Grant all access to read S3 objects.
-    statement = {
-        effect = "Allow"
-        actions = [
-            "s3:GetObjectTorrent",
-            "s3:GetObject",
-        ]
-        resources = [
-            "${aws_s3_bucket.hg_bundles_usw1.arn}/*",
-        ]
-        principals {
-            type = "AWS"
-            identifiers = ["*"]
-        }
-    }
-}
-
-data "aws_iam_policy_document" "hg_bundles_usw2" {
-    # Grant bundler user access to upload and modify objects.
-    statement = {
-        effect = "Allow"
-        actions = [
-            "s3:DeleteObject",
-            "s3:GetObject",
-            "s3:PutObject",
-        ]
-        resources = [
-            "${aws_s3_bucket.hg_bundles_usw2.arn}/*",
-        ]
-        principals {
-            type = "AWS"
-            identifiers = ["${aws_iam_user.hgbundler.arn}"]
-        }
-    }
-
-    # Grant all access to read S3 objects.
-    statement = {
-        effect = "Allow"
-        actions = [
-            "s3:GetObjectTorrent",
-            "s3:GetObject",
-        ]
-        resources = [
-            "${aws_s3_bucket.hg_bundles_usw2.arn}/*",
-        ]
-        principals {
-            type = "AWS"
-            identifiers = ["*"]
-        }
-    }
-}
-
-data "aws_iam_policy_document" "hg_bundles_euc1" {
-    # Grant bundler user access to upload and modify objects.
-    statement = {
-        effect = "Allow"
-        actions = [
-            "s3:DeleteObject",
-            "s3:GetObject",
-            "s3:PutObject",
-        ]
-        resources = [
-            "${aws_s3_bucket.hg_bundles_euc1.arn}/*",
-        ]
-        principals {
-            type = "AWS"
-            identifiers = ["${aws_iam_user.hgbundler.arn}"]
-        }
-    }
-
-    # Grant all access to read S3 objects.
-    statement = {
-        effect = "Allow"
-        actions = [
-            "s3:GetObjectTorrent",
-            "s3:GetObject",
-        ]
-        resources = [
-            "${aws_s3_bucket.hg_bundles_euc1.arn}/*",
+            "${aws_s3_bucket.hg_bundles_region.*.arn}/*",
         ]
         principals {
             type = "AWS"
